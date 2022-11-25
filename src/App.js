@@ -1,25 +1,34 @@
-import logo from './logo.svg';
+import {useState,useEffect} from 'react'
+import {Home,Detail} from "./pages"
 import './App.css';
 
 function App() {
+const [route,setRoute]=useState("/")
+const url = "https://api.coindesk.com/v1/bpi/currentprice.json"
+    const [fetchedData,setFetchedData]=useState({})
+
+    const fetchData=async()=>{
+        const data = await fetch(url)
+        const dataToJson = await data.json()
+        console.log(dataToJson)
+        setFetchedData(dataToJson)
+    }
+    useEffect(()=>{
+        fetchData()
+    },[])
+    
+    // const logMyState=()=>{
+    //     console.log(fetchedData)
+    // }
+        
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+   <>
+      {route==="/" && ( <Home stepHandle={setRoute}/>)}
+      {route==="detail" && (<Detail fetchedData={fetchedData} handleStep={setRoute}/>)}
+      </>
+      
+  )
 }
 
 export default App;
